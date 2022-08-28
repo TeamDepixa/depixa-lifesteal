@@ -27,8 +27,8 @@ public class HeartRecipe {
         NamespacedKey nsKey = new NamespacedKey(plugin, "heart_recipe");
         ShapedRecipe recipe = new ShapedRecipe(nsKey, heart);
         recipe.shape("ABA", "BCB", "ABA");
-        recipe.setIngredient('A', Material.DIAMOND_BLOCK);
-        recipe.setIngredient('B', Material.NETHERITE_INGOT);
+        recipe.setIngredient('B', Material.DIAMOND_BLOCK);
+        recipe.setIngredient('A', Material.NETHERITE_INGOT);
         recipe.setIngredient('C', Material.OBSIDIAN);
 
         plugin.getServer().addRecipe(recipe);
