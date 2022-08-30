@@ -25,16 +25,16 @@ import java.util.List;
         }
         Player player = (Player) sender;
         Player target = Bukkit.getPlayerExact(args[0]);
-        AttributeInstance playerHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        Double currentHealth = playerHealth.getBaseValue();
-        AttributeInstance targetHealth = target.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        Double targetCurrentHealth = targetHealth.getBaseValue();
-        Integer hearts;
         if (target == null) return false;
         if (target.equals(player)) {
             sender.sendMessage("§6Depixa Lifesteal §8| §cYou cannot transfer yourself hearts.");
             return true;
         }
+        AttributeInstance playerHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Double currentHealth = playerHealth.getBaseValue();
+        AttributeInstance targetHealth = target.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Double targetCurrentHealth = targetHealth.getBaseValue();
+        Integer hearts;
         try {
             hearts = Integer.parseInt(args[1]);
         } catch (Exception e) {
