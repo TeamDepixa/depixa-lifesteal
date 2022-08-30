@@ -27,6 +27,14 @@ public class Main extends JavaPlugin {
         this.getCommand("revive").setExecutor(new CommandRevive());
         this.getCommand("transfer").setExecutor(new CommandTransfer());
         new HeartRecipe().heartRecipe();
+
+        new UpdateChecker(this, 104937).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                getLogger().info("You are running the latest version. (" + version + ")");
+            } else {
+                getLogger().warning("There is a new version available: " + version + ". You are on: " + this.getDescription().getVersion() + ". Get the latest version at https://www.spigotmc.org/resources/depixa-lifesteal.104937/");
+            }
+        });
     }
 
     @Override

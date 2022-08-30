@@ -1,7 +1,7 @@
 # depixa-lifesteal
 A simple lifesteal plugin.
 
-## Permissiosn
+## Permissions
 - dls.main **(/lifesteal)**
   - Main command
 - dls.bypass
