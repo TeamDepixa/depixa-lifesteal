@@ -1,5 +1,6 @@
 package gq.depixa.lifesteal;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -11,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -35,18 +35,42 @@ public class EventListener implements Listener {
             AttributeInstance killerHealth = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             Double victimCurrentHealth = victimHealth.getBaseValue();
             Double killerCurrentHealth = killerHealth.getBaseValue();
-            killerHealth.setBaseValue(killerCurrentHealth + 2);
+            if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
+                Integer maxHearts = plugin.getConfig().getInt("max-hearts");
+                if (maxHearts != null && maxHearts != 0 && maxHearts * 2 <= killerCurrentHealth) {
+                    killer.sendMessage("§6Depixa Lifesteal §8| §eYou have reached the maximum amount of hearts. A heart has been given to you instead.");
+                    Material heartMaterial = Material.valueOf(plugin.getConfig().getString("heart-item").toUpperCase());
+                    ItemStack heart = new ItemStack(heartMaterial, 1);
+                    ItemMeta heartMeta = heart.getItemMeta();
+                    heartMeta.setDisplayName("§c❤ Heart");
+                    List<String> lores = new ArrayList<String>();
+                    lores.add("§cClick me to get an extra heart.");
+                    heart.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+                    heartMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    heartMeta.setLore(lores);
+                    heart.setItemMeta(heartMeta);
+                    killer.getInventory().addItem(heart);
+                } else {
+                    killerHealth.setBaseValue(killerCurrentHealth + 2);
+                }
+            }
             if (victimCurrentHealth <= 2) {
-                config.set(victim.getUniqueId() + ".eliminated", true);
-                playerData.saveCustomConfig();
-                victim.kickPlayer("§eYou have been eliminated!");
+                if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
+                    config.set(victim.getUniqueId() + ".eliminated", true);
+                    playerData.saveCustomConfig();
+                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ewas eliminated.");
+                }
+                if (!victim.hasPermission("dls.bypass")) {
+                    victim.kickPlayer("§eYou have been eliminated!");
+                } else {
+                    victim.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                }
                 return;
             }
             victimHealth.setBaseValue(victimCurrentHealth - 2);
         } else {
             AttributeInstance victimHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             Double victimCurrentHealth = victimHealth.getBaseValue();
-            victimHealth.setBaseValue(victimCurrentHealth - 2);
             Material heartMaterial = Material.valueOf(plugin.getConfig().getString("heart-item").toUpperCase());
             ItemStack heart = new ItemStack(heartMaterial, 1);
             ItemMeta heartMeta = heart.getItemMeta();
@@ -57,20 +81,38 @@ public class EventListener implements Listener {
             heartMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             heartMeta.setLore(lores);
             heart.setItemMeta(heartMeta);
-            event.getDrops().add(heart);
+            if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
+                event.getDrops().add(heart);
+            }
             if (victimCurrentHealth <= 2) {
-                config.set(victim.getUniqueId() + ".eliminated", true);
-                playerData.saveCustomConfig();
-                victim.kickPlayer("§eYou have been eliminated!");
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
+                        config.set(victim.getUniqueId() + ".eliminated", true);
+                        playerData.saveCustomConfig();
+                        Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ewas eliminated.");
+                    }
+                    if (!victim.hasPermission("dls.bypass")) {
+                        victim.kickPlayer("§eYou have been eliminated!");
+                    } else {
+                        victim.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                    }
+                }, 1L);
                 return;
             }
+            victimHealth.setBaseValue(victimCurrentHealth - 2);
         }
     }
 
     @EventHandler
-    public void prePlayerJoin(AsyncPlayerPreLoginEvent event) {
-        if (config.getBoolean(event.getUniqueId() + ".eliminated")) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "§eYou have been eliminated!");
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        config.set(event.getPlayer().getUniqueId() + ".username", event.getPlayer().getName());
+        playerData.saveCustomConfig();
+        if (config.getBoolean(event.getPlayer().getUniqueId() + ".eliminated")) {
+            if (event.getPlayer().hasPermission("dls.bypass")) {
+                event.getPlayer().sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+            } else {
+                event.getPlayer().kickPlayer("§eYou have been eliminated!");
+            }
         }
     }
 
@@ -83,9 +125,14 @@ public class EventListener implements Listener {
                 if (event.getItem().getItemMeta().getDisplayName().equals("§c❤ Heart")) {
                     AttributeInstance health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                     Double currentHealth = health.getBaseValue();
-                    health.setBaseValue(currentHealth + 2);
-                    player.sendMessage("§6Depixa Lifesteal §8| §eYou consumed a heart.");
-                    event.getItem().setAmount(event.getItem().getAmount() - 1);
+                    Integer maxHearts = plugin.getConfig().getInt("max-hearts");
+                    if (maxHearts != null && maxHearts != 0 && maxHearts * 2 <= currentHealth) {
+                        player.sendMessage("§6Depixa Lifesteal §8| §cYou have reached the maximum amount of hearts.");
+                    } else {
+                        health.setBaseValue(currentHealth + 2);
+                        player.sendMessage("§6Depixa Lifesteal §8| §eYou consumed a heart.");
+                        event.getItem().setAmount(event.getItem().getAmount() - 1);
+                    }
                 }
             }
         }
@@ -100,11 +147,5 @@ public class EventListener implements Listener {
                 event.getInventory().setResult(null);
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        config.set(event.getPlayer().getUniqueId() + ".username", event.getPlayer().getName());
-        playerData.saveCustomConfig();
     }
 }

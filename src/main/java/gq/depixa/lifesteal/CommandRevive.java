@@ -23,7 +23,7 @@ public class CommandRevive implements CommandExecutor {
             for (String key : config.getKeys(false)) {
                 config.set(key + ".eliminated", null);
             }
-            sender.sendMessage("§6Depixa Lifesteal §8| §aYou revived all eliminated players.");
+            sender.sendMessage("§6Depixa Lifesteal §8| §eYou revived all eliminated players.");
         } else {
             UUID targetId = utils.getUniqueId(args[0]);
             if (targetId == null) {

@@ -4,3 +4,12 @@
 
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 heart-item: 'NETHER_STAR'
+
+# Maximum amount of hearts a player can have.
+# If a player is at max hearts, kills will drop a heart instead of directly giving it to the player.
+# Set to 0 to disable. This value must be an integer.
+max-hearts: 0
+
+# This is not the same as plugin version.
+# Do not touch this value.
+version: 0.1

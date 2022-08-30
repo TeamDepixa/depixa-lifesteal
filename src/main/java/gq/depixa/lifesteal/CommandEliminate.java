@@ -18,17 +18,26 @@ public class CommandEliminate implements CommandExecutor {
         }
         if (args[0].equals("all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                config.set(player.getUniqueId() + ".eliminated", null);
-                player.kickPlayer("§eYou have been eliminated!");
+                config.set(player.getUniqueId() + ".eliminated", true);
+                Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + player.getDisplayName() + " §ewas eliminated.");
+                if (player.hasPermission("dls.bypass")) {
+                    player.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                } else {
+                    player.kickPlayer("§eYou have been eliminated!");
+                }
             }
-            sender.sendMessage("§6Depixa Lifesteal §8| §aYou eliminated all currently online players.");
+            sender.sendMessage("§6Depixa Lifesteal §8| §eYou eliminated all currently online players.");
         } else {
             Player target = Bukkit.getPlayerExact(args[0]);
             if (target != null) {
                 if (!config.getBoolean(target.getUniqueId() + ".eliminated")) {
                     config.set(target.getUniqueId() + ".eliminated", true);
-                    target.kickPlayer("§eYou have been eliminated!");
-                    sender.sendMessage("§6Depixa Lifesteal §8| §eYou eliminated §a" + args[0] + "§e.");
+                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + target.getDisplayName() + " §ewas eliminated.");
+                    if (target.hasPermission("dls.bypass")) {
+                        target.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                    } else {
+                        target.kickPlayer("§eYou have been eliminated!");
+                    }
                 } else {
                     sender.sendMessage("§6Depixa Lifesteal §8| §cThis player is already eliminated.");
                 }

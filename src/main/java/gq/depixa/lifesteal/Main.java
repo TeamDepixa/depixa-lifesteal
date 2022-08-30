@@ -13,6 +13,10 @@ public class Main extends JavaPlugin {
         this.plugin = this;
         this.config = this.getConfig();
         this.playerData = new Configuration("playerdata");
+        if (!config.get("version").equals("0.1")) {
+            config.options().copyDefaults(true);
+            this.saveConfig();
+        }
         getServer().getPluginManager().registerEvents(new EventListener(), this);
 
         this.getCommand("withdraw").setExecutor(new CommandWithdraw());
