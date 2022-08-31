@@ -27,7 +27,7 @@ public class CommandRevive implements CommandExecutor {
         } else {
             UUID targetId = utils.getUniqueId(args[0]);
             if (targetId == null) {
-                sender.sendMessage("§6Depixa Lifesteal §8| §cThis player isn't eliminated.");
+                sender.sendMessage("§6Depixa Lifesteal §8| §cThis player has not joined the server yet.");
                 return true;
             }
             OfflinePlayer target = Bukkit.getOfflinePlayer(targetId);
@@ -38,6 +38,8 @@ public class CommandRevive implements CommandExecutor {
                 } else {
                     sender.sendMessage("§6Depixa Lifesteal §8| §cThis player isn't eliminated.");
                 }
+            } else {
+                sender.sendMessage("§6Depixa Lifesteal §8| §cThis player has not joined the server yet.");
             }
         }
         playerData.saveCustomConfig();

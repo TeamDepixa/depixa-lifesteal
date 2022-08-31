@@ -10,7 +10,7 @@ public class CommandLifesteal implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("§6Depixa Lifesteal §8| §eVersion 1.0.0");
+            sender.sendMessage("§6Depixa Lifesteal §8| §eVersion " + plugin.getDescription().getVersion());
             return true;
         }
         if (args[0].equals("reload")) {

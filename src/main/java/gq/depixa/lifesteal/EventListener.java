@@ -14,6 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -58,7 +59,7 @@ public class EventListener implements Listener {
                 if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
                     config.set(victim.getUniqueId() + ".eliminated", true);
                     playerData.saveCustomConfig();
-                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ewas eliminated.");
+                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
                 }
                 if (!victim.hasPermission("dls.bypass")) {
                     victim.kickPlayer("§eYou have been eliminated!");
@@ -89,7 +90,7 @@ public class EventListener implements Listener {
                     if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
                         config.set(victim.getUniqueId() + ".eliminated", true);
                         playerData.saveCustomConfig();
-                        Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ewas eliminated.");
+                        Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
                     }
                     if (!victim.hasPermission("dls.bypass")) {
                         victim.kickPlayer("§eYou have been eliminated!");
@@ -113,6 +114,23 @@ public class EventListener implements Listener {
             } else {
                 event.getPlayer().kickPlayer("§eYou have been eliminated!");
             }
+        }
+        if (config.get(event.getPlayer().getUniqueId() + ".maxHealth") != null) {
+            AttributeInstance health = event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (health.getBaseValue() == 2) {
+                health.setBaseValue(config.getInt(event.getPlayer().getUniqueId() + ".maxHealth"));
+            } else {
+                health.setBaseValue(health.getBaseValue() + config.getInt(event.getPlayer().getUniqueId() + ".maxHealth"));
+            }
+            config.set(event.getPlayer().getUniqueId() + ".maxHealth", null);
+            playerData.saveCustomConfig();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerKick(PlayerKickEvent event) {
+        if (event.getReason().equals("§eYou have been eliminated!")) {
+            event.setLeaveMessage("");
         }
     }
 

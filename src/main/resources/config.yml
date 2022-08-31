@@ -10,6 +10,9 @@ heart-item: 'NETHER_STAR'
 # Set to 0 to disable. This value must be an integer.
 max-hearts: 0
 
+# This setting allows players to revive an eliminated player by transferring hearts to them.
+allow-transfer-revive: true
+
 # This is not the same as plugin version.
 # Do not touch this value.
-version: 0.1
+version: 0.2

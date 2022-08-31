@@ -1,14 +1,18 @@
 package gq.depixa.lifesteal;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class CommandEliminate implements CommandExecutor {
     Main plugin = Main.getPlugin();
+    Utils utils = new Utils();
     private Configuration playerData = Main.getPlayerConfig();
     FileConfiguration config = playerData.getCustomConfig();
     @Override
@@ -19,7 +23,7 @@ public class CommandEliminate implements CommandExecutor {
         if (args[0].equals("all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 config.set(player.getUniqueId() + ".eliminated", true);
-                Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + player.getDisplayName() + " §ewas eliminated.");
+                Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + player.getDisplayName() + " §ehas been eliminated.");
                 if (player.hasPermission("dls.bypass")) {
                     player.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
                 } else {
@@ -32,7 +36,7 @@ public class CommandEliminate implements CommandExecutor {
             if (target != null) {
                 if (!config.getBoolean(target.getUniqueId() + ".eliminated")) {
                     config.set(target.getUniqueId() + ".eliminated", true);
-                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + target.getDisplayName() + " §ewas eliminated.");
+                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + target.getDisplayName() + " §ehas been eliminated.");
                     if (target.hasPermission("dls.bypass")) {
                         target.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
                     } else {
@@ -40,6 +44,21 @@ public class CommandEliminate implements CommandExecutor {
                     }
                 } else {
                     sender.sendMessage("§6Depixa Lifesteal §8| §cThis player is already eliminated.");
+                }
+            } else {
+                UUID targetId = utils.getUniqueId(args[0]);
+                if (targetId == null) {
+                    sender.sendMessage("§6Depixa Lifesteal §8| §cThis player has not joined the server yet.");
+                    return true;
+                }
+                OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetId);
+                if (offlineTarget == null) {
+                    sender.sendMessage("§6Depixa Lifesteal §8| §cThis player has not joined the server yet.");
+                    return true;
+                }
+                if (!config.getBoolean(targetId + ".eliminated")) {
+                    config.set(targetId + ".eliminated", true);
+                    Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + offlineTarget.getName() + " §ehas been eliminated.");
                 }
             }
         }
