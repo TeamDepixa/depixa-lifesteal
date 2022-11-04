@@ -83,24 +83,26 @@ public class EventListener implements Listener {
             heartMeta.setLore(lores);
             heart.setItemMeta(heartMeta);
             if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
-                event.getDrops().add(heart);
-            }
-            if (victimCurrentHealth <= 2) {
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
-                        config.set(victim.getUniqueId() + ".eliminated", true);
-                        playerData.saveCustomConfig();
-                        Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
+                if (plugin.getConfig().getBoolean("drop-hearts-on-death")) {
+                    event.getDrops().add(heart);
+                    if (victimCurrentHealth <= 2) {
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
+                                config.set(victim.getUniqueId() + ".eliminated", true);
+                                playerData.saveCustomConfig();
+                                Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
+                            }
+                            if (!victim.hasPermission("dls.bypass")) {
+                                victim.kickPlayer("§eYou have been eliminated!");
+                            } else {
+                                victim.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                            }
+                        }, 1L);
+                        return;
                     }
-                    if (!victim.hasPermission("dls.bypass")) {
-                        victim.kickPlayer("§eYou have been eliminated!");
-                    } else {
-                        victim.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
-                    }
-                }, 1L);
-                return;
+                    victimHealth.setBaseValue(victimCurrentHealth - 2);
+                }
             }
-            victimHealth.setBaseValue(victimCurrentHealth - 2);
         }
     }
 

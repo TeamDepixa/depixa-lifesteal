@@ -13,7 +13,11 @@ public class CommandLifesteal implements CommandExecutor {
             sender.sendMessage("§6Depixa Lifesteal §8| §eVersion " + plugin.getDescription().getVersion());
             return true;
         }
-        if (args[0].equals("reload")) {
+        if (args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("dls.main")) {
+                sender.sendMessage("§cYou do not have the required permission to use this command.");
+                return true;
+            }
             sender.sendMessage("§6Depixa Lifesteal §8| §eReloaded the configuration files.");
             plugin.reloadConfig();
             config.reloadCustomConfig();

@@ -13,6 +13,9 @@ max-hearts: 0
 # This setting allows players to revive an eliminated player by transferring hearts to them.
 allow-transfer-revive: true
 
+# This setting controls whether hearts will drop on a non-player kill death. (cactus, fall damage, mobs, etc)
+drop-hearts-on-death: true
+
 # This is not the same as plugin version.
 # Do not touch this value.
-version: 0.2
+version: 0.3
