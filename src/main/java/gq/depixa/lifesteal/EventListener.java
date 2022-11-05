@@ -160,6 +160,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void prepareItemCraft(PrepareItemCraftEvent event) {
+        if (event.getInventory().getResult() == null) return;
         for (ItemStack stack : event.getInventory()) {
             if (event.getInventory().getResult().equals(stack)) continue;
             if (stack == null) continue;
