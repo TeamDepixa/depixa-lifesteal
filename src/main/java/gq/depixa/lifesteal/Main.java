@@ -13,9 +13,9 @@ public class Main extends JavaPlugin {
         this.plugin = this;
         this.config = this.getConfig();
         this.playerData = new Configuration("playerdata");
-        if (!config.get("version").equals("0.3")) {
+        if (!config.get("version").equals("0.4")) {
             config.options().copyDefaults(true);
-            config.set("version", "0.3");
+            config.set("version", "0.4");
             this.saveConfig();
         }
         getServer().getPluginManager().registerEvents(new EventListener(), this);

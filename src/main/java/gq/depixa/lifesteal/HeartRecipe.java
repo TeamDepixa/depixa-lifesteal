@@ -26,11 +26,16 @@ public class HeartRecipe {
         heart.setItemMeta(heartMeta);
         NamespacedKey nsKey = new NamespacedKey(plugin, "heart_recipe");
         ShapedRecipe recipe = new ShapedRecipe(nsKey, heart);
-        recipe.shape("ABA", "BCB", "ABA");
-        recipe.setIngredient('B', Material.DIAMOND_BLOCK);
-        recipe.setIngredient('A', Material.NETHERITE_INGOT);
-        recipe.setIngredient('C', Material.OBSIDIAN);
-
+        recipe.shape("123", "456", "789");
+        recipe.setIngredient('1', Material.valueOf(plugin.getConfig().getString("heart-recipe.1").toUpperCase()));
+        recipe.setIngredient('2', Material.valueOf(plugin.getConfig().getString("heart-recipe.2").toUpperCase()));
+        recipe.setIngredient('3', Material.valueOf(plugin.getConfig().getString("heart-recipe.3").toUpperCase()));
+        recipe.setIngredient('4', Material.valueOf(plugin.getConfig().getString("heart-recipe.4").toUpperCase()));
+        recipe.setIngredient('5', Material.valueOf(plugin.getConfig().getString("heart-recipe.5").toUpperCase()));
+        recipe.setIngredient('6', Material.valueOf(plugin.getConfig().getString("heart-recipe.6").toUpperCase()));
+        recipe.setIngredient('7', Material.valueOf(plugin.getConfig().getString("heart-recipe.7").toUpperCase()));
+        recipe.setIngredient('8', Material.valueOf(plugin.getConfig().getString("heart-recipe.8").toUpperCase()));
+        recipe.setIngredient('9', Material.valueOf(plugin.getConfig().getString("heart-recipe.9").toUpperCase()));
         plugin.getServer().addRecipe(recipe);
     }
 }

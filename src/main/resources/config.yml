@@ -16,6 +16,21 @@ allow-transfer-revive: true
 # This setting controls whether hearts will drop on a non-player kill death. (cactus, fall damage, mobs, etc)
 drop-hearts-on-death: true
 
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# 1 | 2 | 3
+# 4 | 5 | 6
+# 7 | 8 | 9
+heart-recipe:
+  1: 'NETHERITE_INGOT'
+  2: 'DIAMOND_BLOCK'
+  3: 'NETHERITE_INGOT'
+  4: 'DIAMOND_BLOCK'
+  5: 'OBSIDIAN'
+  6: 'DIAMOND_BLOCK'
+  7: 'NETHERITE_INGOT'
+  8: 'DIAMOND_BLOCK'
+  9: 'NETHERITE_INGOT'
+
 # This is not the same as plugin version.
 # Do not touch this value.
-version: 0.3
+version: 0.4
