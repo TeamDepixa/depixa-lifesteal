@@ -16,6 +16,11 @@ allow-transfer-revive: true
 # This setting controls whether hearts will drop on a non-player kill death. (cactus, fall damage, mobs, etc)
 drop-hearts-on-death: true
 
+# How long a player is banned (eliminated) for in seconds.
+# 24 hours: 86400
+# Set to 0 to disable.
+ban-length: 0
+
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # 1 | 2 | 3
 # 4 | 5 | 6
@@ -33,4 +38,4 @@ heart-recipe:
 
 # This is not the same as plugin version.
 # Do not touch this value.
-version: 0.4
+version: 0.5

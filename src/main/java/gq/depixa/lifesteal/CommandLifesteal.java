@@ -15,14 +15,14 @@ public class CommandLifesteal implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("dls.main")) {
-                sender.sendMessage("§cYou do not have the required permission to use this command.");
+                sender.sendMessage("§6Depixa Lifesteal §8| §eVersion " + plugin.getDescription().getVersion());
                 return true;
             }
             sender.sendMessage("§6Depixa Lifesteal §8| §eReloaded the configuration files.");
             plugin.reloadConfig();
             config.reloadCustomConfig();
         } else {
-            sender.sendMessage("§6Depixa Lifesteal §8| §eVersion 1.0.0");
+            sender.sendMessage("§6Depixa Lifesteal §8| §eVersion " + plugin.getDescription().getVersion());;
         }
         return true;
     }

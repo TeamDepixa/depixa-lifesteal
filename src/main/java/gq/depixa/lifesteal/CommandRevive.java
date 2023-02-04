@@ -11,17 +11,19 @@ import java.util.UUID;
 
 public class CommandRevive implements CommandExecutor {
     Main plugin = Main.getPlugin();
-    private Configuration playerData = Main.getPlayerConfig();
-    FileConfiguration config = playerData.getCustomConfig();
+    private Configuration playerData = new Configuration("playerdata");
     Utils utils = new Utils();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        playerData.reloadCustomConfig();
+        FileConfiguration config = playerData.getCustomConfig();
         if (args.length != 1) {
             return false;
         }
         if (args[0].equals("all")) {
             for (String key : config.getKeys(false)) {
                 config.set(key + ".eliminated", null);
+                config.set(key + ".banTime", null);
             }
             sender.sendMessage("§6Depixa Lifesteal §8| §eYou revived all eliminated players.");
         } else {
@@ -34,6 +36,7 @@ public class CommandRevive implements CommandExecutor {
             if (target != null) {
                 if (config.getBoolean(target.getUniqueId() + ".eliminated")) {
                     config.set(target.getUniqueId() + ".eliminated", null);
+                    config.set(target.getUniqueId() + ".banTime", null);
                     sender.sendMessage("§6Depixa Lifesteal §8| §eYou revived §a" + args[0] + "§e.");
                 } else {
                     sender.sendMessage("§6Depixa Lifesteal §8| §cThis player isn't eliminated.");

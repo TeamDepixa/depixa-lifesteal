@@ -22,10 +22,11 @@ import java.util.UUID;
 public class CommandTransfer implements CommandExecutor {
     Main plugin = Main.getPlugin();
     Utils utils = new Utils();
-    Configuration playerData = Main.getPlayerConfig();
-    FileConfiguration config = playerData.getCustomConfig();
+    Configuration playerData = new Configuration("playerdata");
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        playerData.reloadCustomConfig();
+        FileConfiguration config = playerData.getCustomConfig();
         if (args.length != 2) {
             return false;
         }

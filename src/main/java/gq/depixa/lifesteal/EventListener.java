@@ -21,14 +21,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class EventListener implements Listener {
     Main plugin = Main.getPlugin();
-    private Configuration playerData = Main.getPlayerConfig();
-    FileConfiguration config = playerData.getCustomConfig();
+    private Configuration playerData = new Configuration("playerdata");
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        playerData.reloadCustomConfig();
+        FileConfiguration config = playerData.getCustomConfig();
         Player victim = event.getEntity();
         if (victim.getKiller() != null) {
             Player killer = victim.getKiller();
@@ -58,6 +60,7 @@ public class EventListener implements Listener {
             if (victimCurrentHealth <= 2) {
                 if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
                     config.set(victim.getUniqueId() + ".eliminated", true);
+                    config.set(victim.getUniqueId() + ".banTime", System.currentTimeMillis());
                     playerData.saveCustomConfig();
                     Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
                 }
@@ -89,6 +92,7 @@ public class EventListener implements Listener {
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
                             if (!config.getBoolean(victim.getUniqueId() + ".eliminated")) {
                                 config.set(victim.getUniqueId() + ".eliminated", true);
+                                config.set(victim.getUniqueId() + ".banTime", System.currentTimeMillis());
                                 playerData.saveCustomConfig();
                                 Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + victim.getDisplayName() + " §ehas been eliminated.");
                             }
@@ -108,13 +112,33 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        playerData.reloadCustomConfig();
+        FileConfiguration config = playerData.getCustomConfig();
         config.set(event.getPlayer().getUniqueId() + ".username", event.getPlayer().getName());
         playerData.saveCustomConfig();
         if (config.getBoolean(event.getPlayer().getUniqueId() + ".eliminated")) {
-            if (event.getPlayer().hasPermission("dls.bypass")) {
-                event.getPlayer().sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+            if (((System.currentTimeMillis() - config.getLong(event.getPlayer().getUniqueId() + ".banTime"))) >= plugin.getConfig().getInt("ban-length") * 1000 && plugin.getConfig().getInt("ban-length") > 0) {
+                config.set(event.getPlayer().getUniqueId() + ".eliminated", null);
+                config.set(event.getPlayer().getUniqueId() + ".banTime", null);
+                event.getPlayer().sendMessage("§eYou have been unbanned. Welcome back.");
+                playerData.saveCustomConfig();
             } else {
-                event.getPlayer().kickPlayer("§eYou have been eliminated!");
+                if (event.getPlayer().hasPermission("dls.bypass")) {
+                    event.getPlayer().sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
+                } else {
+                    if (plugin.getConfig().getInt("ban-length") > 0) {
+                        Long millis =  (plugin.getConfig().getLong("ban-length") * 1000) - (System.currentTimeMillis() - config.getLong(event.getPlayer().getUniqueId() + ".banTime"));
+                        String timeLeft = String.format("%02d:%02d:%02d",
+                                TimeUnit.MILLISECONDS.toHours(millis),
+                                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                        event.getPlayer().kickPlayer("§eYou have been eliminated!\n§eYou will be unbanned in §c" + timeLeft);
+                    } else {
+                        event.getPlayer().kickPlayer("§eYou have been eliminated!");
+                    }
+                }
             }
         }
         if (config.get(event.getPlayer().getUniqueId() + ".maxHealth") != null) {
@@ -131,7 +155,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
-        if (event.getReason().equals("§eYou have been eliminated!")) {
+        if (event.getReason().startsWith("§eYou have been eliminated!")) {
             event.setLeaveMessage("");
         }
     }

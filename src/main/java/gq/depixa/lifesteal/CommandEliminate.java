@@ -13,16 +13,18 @@ import java.util.UUID;
 public class CommandEliminate implements CommandExecutor {
     Main plugin = Main.getPlugin();
     Utils utils = new Utils();
-    private Configuration playerData = Main.getPlayerConfig();
-    FileConfiguration config = playerData.getCustomConfig();
+    private Configuration playerData = new Configuration("playerdata");
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        playerData.reloadCustomConfig();
+        FileConfiguration config = playerData.getCustomConfig();
         if (args.length != 1) {
             return false;
         }
         if (args[0].equals("all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 config.set(player.getUniqueId() + ".eliminated", true);
+                config.set(player.getUniqueId() + ".banTime", System.currentTimeMillis());
                 Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + player.getDisplayName() + " §ehas been eliminated.");
                 if (player.hasPermission("dls.bypass")) {
                     player.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
@@ -36,6 +38,7 @@ public class CommandEliminate implements CommandExecutor {
             if (target != null) {
                 if (!config.getBoolean(target.getUniqueId() + ".eliminated")) {
                     config.set(target.getUniqueId() + ".eliminated", true);
+                    config.set(target.getUniqueId() + ".banTime", System.currentTimeMillis());
                     Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + target.getDisplayName() + " §ehas been eliminated.");
                     if (target.hasPermission("dls.bypass")) {
                         target.sendMessage("§6Depixa Lifesteal §8| §eYou have been eliminated, but you have bypass enabled.");
@@ -58,6 +61,7 @@ public class CommandEliminate implements CommandExecutor {
                 }
                 if (!config.getBoolean(targetId + ".eliminated")) {
                     config.set(targetId + ".eliminated", true);
+                    config.set(targetId + ".banTime", System.currentTimeMillis());
                     Bukkit.broadcastMessage("§6Depixa Lifesteal §8| §a" + offlineTarget.getName() + " §ehas been eliminated.");
                 }
             }
