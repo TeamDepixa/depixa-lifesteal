@@ -1,4 +1,5 @@
 # depixa-lifesteal
+https://www.spigotmc.org/resources/depixa-lifesteal.104937/
 A simple lifesteal plugin.
 
 ## Permissions
