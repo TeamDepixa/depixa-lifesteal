@@ -13,7 +13,7 @@ public class Main extends JavaPlugin {
         this.saveDefaultConfig();
         this.plugin = this;
         this.playerData = new Configuration("playerdata");
-        if (!this.getConfig().get("version").equals(0.5)) {
+        if (!this.getConfig().get("version").equals(0.6)) {
             if (this.getConfig().getKeys(true).size() == 0) {
                 this.saveDefaultConfig();
             } else {
@@ -37,7 +37,7 @@ public class Main extends JavaPlugin {
                 for (String key : oldConfig.keySet()) {
                     this.getConfig().set(key, oldConfig.get(key));
                 }
-                this.getConfig().set("version", 0.5);
+                this.getConfig().set("version", 0.6);
                 this.saveConfig();
                 this.reloadConfig();
                 getLogger().info("Updated your config.");
@@ -53,6 +53,7 @@ public class Main extends JavaPlugin {
         this.getCommand("resethealth").setExecutor(new CommandResetHealth());
         this.getCommand("revive").setExecutor(new CommandRevive());
         this.getCommand("transfer").setExecutor(new CommandTransfer());
+        this.getCommand("viewhearts").setExecutor(new CommandViewHearts());
         new HeartRecipe().heartRecipe();
 
         new UpdateChecker(this, 104937).getVersion(version -> {

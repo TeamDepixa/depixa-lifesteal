@@ -39,7 +39,7 @@ public class CommandTransfer implements CommandExecutor {
                 return true;
             }
             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetId);
-            if (offlineTarget == null) {
+            if (!offlineTarget.hasPlayedBefore()) {
                 sender.sendMessage("§6Depixa Lifesteal §8| §cThis player has not joined the server yet.");
                 return true;
             }
@@ -64,7 +64,7 @@ public class CommandTransfer implements CommandExecutor {
             config.set(targetId + ".maxHealth", health);
             if (config.getBoolean(targetId + ".eliminated")) {
                 config.set(targetId + ".eliminated", null);
-                config.set(targetId + ".maxHealth", health);
+                config.set(targetId + ".maxHealth", (config.getInt(targetId + ".maxHealth") + health));
                 sender.sendMessage("§6Depixa Lifesteal §8| §eYou revived and transferred §a" + args[1] + " §ehearts to §a" + offlineTarget.getName() + "§e.");
             } else {
                 sender.sendMessage("§6Depixa Lifesteal §8| §eYou transferred §a" + args[1] + " §ehearts to §a" + offlineTarget.getName() + "§e.");

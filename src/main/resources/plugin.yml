@@ -1,5 +1,5 @@
 name: Depixa-Lifesteal
-version: 1.0.7
+version: 1.0.8
 author: Klxzz
 main: gq.depixa.lifesteal.Main
 api-version: 1.17
@@ -33,3 +33,6 @@ commands:
     aliases: [givehp, transferhp, transferhearts]
     description: Transfers hearts to another player.
     usage: /<command> <player> <amount>
+  viewhearts:
+    description: View how many hearts another player has.
+    usage: /<command> <player>

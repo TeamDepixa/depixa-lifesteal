@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'gq.depixa.lifesteal'
-version '1.0.7'
+version '1.0.8'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"

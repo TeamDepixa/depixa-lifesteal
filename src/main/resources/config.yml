@@ -16,10 +16,19 @@ allow-transfer-revive: true
 # This setting controls whether hearts will drop on a non-player kill death. (cactus, fall damage, mobs, etc)
 drop-hearts-on-death: true
 
+# Sets the amount of hearts a player loses when they die.
+# Default value: 1
+hearts-lost-on-death: 1
+
 # How long a player is banned (eliminated) for in seconds.
 # 24 hours: 86400
 # Set to 0 to disable.
 ban-length: 0
+
+# Allows other players to view how many hearts a certain player has.
+# If disabled, only people with the permission dls.viewhearts can use it.
+# Command: /viewhearts <player>
+view-other-players-hearts: false
 
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # 1 | 2 | 3
@@ -38,4 +47,4 @@ heart-recipe:
 
 # This is not the same as plugin version.
 # Do not touch this value.
-version: 0.5
+version: 0.6
