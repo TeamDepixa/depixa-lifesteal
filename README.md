@@ -5,6 +5,8 @@ A simple lifesteal plugin.
 ## Permissions
 - dls.main **(/lifesteal)**
   - Main command
+- dls.viewhearts **(/viewhearts)**
+  - If disabled in config, this permission is required to use the command.
 - dls.bypass
   - Bypass elimination
 - dls.eliminate **(/eliminate)**
@@ -24,6 +26,8 @@ A simple lifesteal plugin.
   - Withdraw hearts.
 - /transfer \<player\> \<amount\>
   - Transfers hearts to another player.
+- /viewhearts \<player\>
+  - View how many hearts another player has.
 - /eliminate \<all | player\>
   - Permission: dls.eliminate
   - Eliminates a player
