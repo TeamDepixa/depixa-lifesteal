@@ -42,4 +42,4 @@ A simple lifesteal plugin.
   - Gives a player a certain amount of heart items.
   
 ## Heart Recipe
-  <img src="https://cdn.discordapp.com/attachments/951926968276893696/1013528828276129853/unknown.png"/>
+  <img src="https://cdn.discordapp.com/attachments/1014575528239452200/1264014208865927269/crafting-grid.png?ex=669c5477&is=669b02f7&hm=5e96dae22e975a2c9ccd9a5ddd3e818fe51fb2853a271bbfa5cbf5804fe86906&"/>
